@@ -1,14 +1,9 @@
 import { useEffect, useState } from "react";
 import { api, ApiError } from "../api/client";
-import type { ObservabilityMetrics } from "../api/types";
+import type { ObservabilityMetrics, RecentRun } from "../api/types";
 
-interface RunDetail {
-  run_id: number;
-  patient_id: number;
-  requested_service: string | null;
-  determination: string | null;
-  status: string;
-  created_at: string;
+interface RunDetail extends RecentRun {
+  patient_identifier?: string | null;
 }
 
 interface TraceEntry {
@@ -20,7 +15,13 @@ interface TraceEntry {
   timestamp: string;
 }
 
+interface PatientStats {
+  identifier: string;
+  count: number;
+}
+
 export default function HistoryPage() {
+  const [allRuns, setAllRuns] = useState<RunDetail[]>([]);
   const [runs, setRuns] = useState<RunDetail[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,6 +30,8 @@ export default function HistoryPage() {
   const [traceLoading, setTraceLoading] = useState(false);
   const [traceError, setTraceError] = useState<string | null>(null);
   const [expandedAgents, setExpandedAgents] = useState<Set<number>>(new Set());
+  const [selectedPatient, setSelectedPatient] = useState<string | null>(null);
+  const [patientStats, setPatientStats] = useState<PatientStats[]>([]);
 
   const load = () => {
     setLoading(true);
@@ -36,16 +39,32 @@ export default function HistoryPage() {
     api
       .getMetrics("all")
       .then((metrics: ObservabilityMetrics) => {
-        setRuns(
-          metrics.recent_runs.map((r) => ({
-            run_id: r.run_id,
-            patient_id: r.patient_id,
-            requested_service: r.requested_service,
-            determination: r.determination,
-            status: r.status,
-            created_at: r.created_at,
-          }))
-        );
+        const runsData = metrics.recent_runs.map((r) => ({
+          run_id: r.run_id,
+          patient_id: r.patient_id,
+          patient_identifier: r.patient_identifier || `Patient ${r.patient_id}`,
+          requested_service: r.requested_service,
+          determination: r.determination,
+          status: r.status,
+          created_at: r.created_at,
+        }));
+        
+        setAllRuns(runsData);
+        setRuns(runsData);
+        
+        // Calculate patient statistics
+        const patientMap = new Map<string, number>();
+        runsData.forEach((run) => {
+          const identifier = run.patient_identifier || `Patient ${run.patient_id}`;
+          patientMap.set(identifier, (patientMap.get(identifier) || 0) + 1);
+        });
+        
+        const stats = Array.from(patientMap.entries())
+          .map(([identifier, count]) => ({ identifier, count }))
+          .sort((a, b) => b.count - a.count);
+        
+        setPatientStats(stats);
+        setSelectedPatient(null);
       })
       .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load history."))
       .finally(() => setLoading(false));
@@ -82,6 +101,18 @@ export default function HistoryPage() {
     document.body.removeChild(a);
   };
 
+  const filterByPatient = (patientIdentifier: string | null) => {
+    setSelectedPatient(patientIdentifier);
+    setSelectedRunId(null);
+    setTraceData([]);
+    
+    if (patientIdentifier === null) {
+      setRuns(allRuns);
+    } else {
+      setRuns(allRuns.filter((run) => run.patient_identifier === patientIdentifier));
+    }
+  };
+
   useEffect(() => {
     load();
   }, []);
@@ -95,92 +126,167 @@ export default function HistoryPage() {
         </button>
       </div>
       <p className="muted" style={{ marginTop: -10 }}>
-        View complete history of all prior authorization requests with all statuses. Click on a request to view its
-        complete stack trace and download reports.
+        View complete history of all prior authorization requests with all statuses. Filter by patient identifier and
+        view complete stack traces with report download options.
       </p>
 
       {error && <div className="error-banner">{error}</div>}
       {loading && runs.length === 0 && <p className="loading">Loading request history…</p>}
 
-      {!loading && runs.length === 0 && !error && (
+      {!loading && allRuns.length === 0 && !error && (
         <p className="empty-state">No requests yet.</p>
       )}
 
-      {!loading && runs.length > 0 && (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
-          {/* Left panel - List of runs */}
+      {!loading && allRuns.length > 0 && (
+        <div style={{ display: "grid", gridTemplateColumns: "280px 1fr 1fr", gap: 16 }}>
+          {/* Left panel - Patient filter */}
           <div className="card" style={{ maxHeight: "80vh", overflowY: "auto" }}>
-            <h3 style={{ marginTop: 0 }}>All Requests ({runs.length})</h3>
+            <h3 style={{ marginTop: 0 }}>Filter by Patient</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {runs.map((run) => (
+              <div
+                onClick={() => filterByPatient(null)}
+                style={{
+                  padding: 12,
+                  border: selectedPatient === null ? "2px solid #0066cc" : "1px solid #ddd",
+                  borderRadius: 6,
+                  cursor: "pointer",
+                  backgroundColor: selectedPatient === null ? "#f0f8ff" : "#fff",
+                  transition: "all 0.2s",
+                }}
+              >
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <strong>All Patients</strong>
+                  <span
+                    className="pill"
+                    style={{
+                      backgroundColor: "#e3f2fd",
+                      color: "#1976d2",
+                      padding: "2px 8px",
+                      borderRadius: 4,
+                      fontSize: 12,
+                    }}
+                  >
+                    {allRuns.length}
+                  </span>
+                </div>
+              </div>
+
+              {patientStats.map((patient) => (
                 <div
-                  key={run.run_id}
-                  onClick={() => loadTrace(run.run_id)}
+                  key={patient.identifier}
+                  onClick={() => filterByPatient(patient.identifier)}
                   style={{
                     padding: 12,
-                    border: selectedRunId === run.run_id ? "2px solid #0066cc" : "1px solid #ddd",
+                    border: selectedPatient === patient.identifier ? "2px solid #0066cc" : "1px solid #ddd",
                     borderRadius: 6,
                     cursor: "pointer",
-                    backgroundColor: selectedRunId === run.run_id ? "#f0f8ff" : "#fff",
+                    backgroundColor: selectedPatient === patient.identifier ? "#f0f8ff" : "#fff",
                     transition: "all 0.2s",
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <strong>#{run.run_id}</strong>
+                    <strong style={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {patient.identifier}
+                    </strong>
                     <span
                       className="pill"
                       style={{
-                        backgroundColor:
-                          run.status === "completed" ? "#e8f5e9" : run.status === "running" ? "#fff3e0" : "#ffebee",
-                        color:
-                          run.status === "completed"
-                            ? "#2e7d32"
-                            : run.status === "running"
-                              ? "#f57c00"
-                              : "#c62828",
+                        backgroundColor: "#e8f5e9",
+                        color: "#2e7d32",
                         padding: "2px 8px",
                         borderRadius: 4,
                         fontSize: 12,
+                        flexShrink: 0,
+                        marginLeft: 8,
                       }}
                     >
-                      {run.status}
+                      {patient.count}
                     </span>
-                  </div>
-                  <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
-                    Patient {run.patient_id} • {run.requested_service ?? "—"}
-                  </div>
-                  <div style={{ marginTop: 6, display: "flex", gap: 8 }}>
-                    {run.determination && (
-                      <span
-                        className="pill"
-                        style={{
-                          backgroundColor:
-                            run.determination === "approved"
-                              ? "#c8e6c9"
-                              : run.determination === "denied"
-                                ? "#ffcdd2"
-                                : "#ffe082",
-                          color:
-                            run.determination === "approved"
-                              ? "#1b5e20"
-                              : run.determination === "denied"
-                                ? "#b71c1c"
-                                : "#f57f17",
-                          padding: "2px 8px",
-                          borderRadius: 4,
-                          fontSize: 11,
-                        }}
-                      >
-                        {run.determination}
-                      </span>
-                    )}
-                  </div>
-                  <div className="muted" style={{ fontSize: 11, marginTop: 6 }}>
-                    {new Date(run.created_at).toLocaleString()}
                   </div>
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* Middle panel - List of runs */}
+          <div className="card" style={{ maxHeight: "80vh", overflowY: "auto" }}>
+            <h3 style={{ marginTop: 0 }}>
+              Requests {selectedPatient && `for ${selectedPatient}`} ({runs.length})
+            </h3>
+            {runs.length === 0 ? (
+              <p className="empty-state">No requests for this patient.</p>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                {runs.map((run) => (
+                  <div
+                    key={run.run_id}
+                    onClick={() => loadTrace(run.run_id)}
+                    style={{
+                      padding: 12,
+                      border: selectedRunId === run.run_id ? "2px solid #0066cc" : "1px solid #ddd",
+                      borderRadius: 6,
+                      cursor: "pointer",
+                      backgroundColor: selectedRunId === run.run_id ? "#f0f8ff" : "#fff",
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <strong>#{run.run_id}</strong>
+                      <span
+                        className="pill"
+                        style={{
+                          backgroundColor:
+                            run.status === "completed" ? "#e8f5e9" : run.status === "running" ? "#fff3e0" : "#ffebee",
+                          color:
+                            run.status === "completed"
+                              ? "#2e7d32"
+                              : run.status === "running"
+                                ? "#f57c00"
+                                : "#c62828",
+                          padding: "2px 8px",
+                          borderRadius: 4,
+                          fontSize: 12,
+                        }}
+                      >
+                        {run.status}
+                      </span>
+                    </div>
+                    <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
+                      {run.requested_service ?? "—"}
+                    </div>
+                    <div style={{ marginTop: 6, display: "flex", gap: 8 }}>
+                      {run.determination && (
+                        <span
+                          className="pill"
+                          style={{
+                            backgroundColor:
+                              run.determination === "approved"
+                                ? "#c8e6c9"
+                                : run.determination === "denied"
+                                  ? "#ffcdd2"
+                                  : "#ffe082",
+                            color:
+                              run.determination === "approved"
+                                ? "#1b5e20"
+                                : run.determination === "denied"
+                                  ? "#b71c1c"
+                                  : "#f57f17",
+                            padding: "2px 8px",
+                            borderRadius: 4,
+                            fontSize: 11,
+                          }}
+                        >
+                          {run.determination}
+                        </span>
+                      )}
+                    </div>
+                    <div className="muted" style={{ fontSize: 11, marginTop: 6 }}>
+                      {new Date(run.created_at).toLocaleString()}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Right panel - Stack trace */}
