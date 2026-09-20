@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { api, ApiError } from "../api/client";
 import type { ReviewQueueItem } from "../api/types";
 import { DeterminationBadge } from "../components/Badge";
@@ -8,8 +8,10 @@ export default function ReviewQueuePage() {
   const [queue, setQueue] = useState<ReviewQueueItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedFilter, setSelectedFilter] = useState<string>("pended");
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  
+  const selectedFilter = searchParams.get("determination") || "pended";
 
   const load = (determination: string = selectedFilter) => {
     setLoading(true);
@@ -23,11 +25,10 @@ export default function ReviewQueuePage() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [selectedFilter]);
 
   const handleFilterChange = (filter: string) => {
-    setSelectedFilter(filter);
-    load(filter);
+    setSearchParams({ determination: filter });
   };
 
   return (
