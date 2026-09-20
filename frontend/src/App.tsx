@@ -6,6 +6,7 @@ import GuidelineSearchPage from "./pages/GuidelineSearchPage";
 import ObservabilityPage from "./pages/ObservabilityPage";
 import ReviewQueuePage from "./pages/ReviewQueuePage";
 import ReviewDetailPage from "./pages/ReviewDetailPage";
+import HistoryPage from "./pages/HistoryPage";
 
 export default function App() {
   return (
@@ -22,6 +23,9 @@ export default function App() {
           <NavLink to="/guidelines" className={({ isActive }) => (isActive ? "active" : "")}>
             Policy Search
           </NavLink>
+          <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : "")}>
+            History
+          </NavLink>
           <NavLink to="/observability" className={({ isActive }) => (isActive ? "active" : "")}>
             Observability
           </NavLink>
@@ -37,6 +41,7 @@ export default function App() {
           <Route path="/review" element={<ReviewQueuePage />} />
           <Route path="/review/:runId" element={<ReviewDetailPage />} />
           <Route path="/guidelines" element={<GuidelineSearchPage />} />
+          <Route path="/history" element={<HistoryPage />} />
           <Route path="/observability" element={<ObservabilityPage />} />
         </Routes>
       </main>
