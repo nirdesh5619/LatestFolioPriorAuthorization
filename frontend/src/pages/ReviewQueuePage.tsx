@@ -8,13 +8,14 @@ export default function ReviewQueuePage() {
   const [queue, setQueue] = useState<ReviewQueueItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedFilter, setSelectedFilter] = useState<string>("pended");
   const navigate = useNavigate();
 
-  const load = () => {
+  const load = (determination: string = selectedFilter) => {
     setLoading(true);
     setError(null);
     api
-      .getReviewQueue()
+      .getReviewQueue(determination)
       .then(setQueue)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load review queue."))
       .finally(() => setLoading(false));
@@ -24,11 +25,16 @@ export default function ReviewQueuePage() {
     load();
   }, []);
 
+  const handleFilterChange = (filter: string) => {
+    setSelectedFilter(filter);
+    load(filter);
+  };
+
   return (
     <div>
       <div className="page-title">
         <h2>Review queue</h2>
-        <button className="secondary" onClick={load} disabled={loading}>
+        <button className="secondary" onClick={() => load()} disabled={loading}>
           {loading ? "Refreshing…" : "Refresh"}
         </button>
       </div>
@@ -36,6 +42,30 @@ export default function ReviewQueuePage() {
         Every determination requires a clinical reviewer's sign-off before it is final. This queue lists
         completed determinations awaiting that review, oldest first.
       </p>
+
+      <div style={{ marginBottom: 16 }}>
+        <label style={{ marginRight: 16, fontWeight: 500 }}>Filter by Status:</label>
+        <button
+          className={selectedFilter === "pended" ? "primary" : "secondary"}
+          onClick={() => handleFilterChange("pended")}
+          style={{ marginRight: 8 }}
+        >
+          Pended
+        </button>
+        <button
+          className={selectedFilter === "approved" ? "primary" : "secondary"}
+          onClick={() => handleFilterChange("approved")}
+          style={{ marginRight: 8 }}
+        >
+          Approved
+        </button>
+        <button
+          className={selectedFilter === "denied" ? "primary" : "secondary"}
+          onClick={() => handleFilterChange("denied")}
+        >
+          Denied
+        </button>
+      </div>
 
       {error && <div className="error-banner">{error}</div>}
       {loading && queue.length === 0 && <p className="loading">Loading queue…</p>}
