@@ -1,0 +1,52 @@
+GUIDELINE: DEMO PRIOR AUTHORIZATION CRITERIA - BARIATRIC SURGERY
+VERSION: 1.0
+ORGANIZATION: Synthetic Payer Clinical Policy Unit
+STATUS: DEMONSTRATION DATA - NOT AN ACTUAL PAYER POLICY
+
+SECTION: Coverage Criteria
+
+Criterion 1: Bariatric surgery is considered medically necessary for adults
+with a body mass index (BMI) of 40 or greater, regardless of comorbidities.
+
+Criterion 2: Bariatric surgery is considered medically necessary for adults
+with a BMI of 35 to 39.9 when at least one obesity-related comorbidity is
+documented, such as type 2 diabetes, hypertension, obstructive sleep apnea,
+or dyslipidemia.
+
+Criterion 3: The patient must have documented participation in a supervised
+weight-management program for at least six months within the two years
+preceding the request, including nutrition counseling.
+
+Criterion 4: A psychological evaluation confirming the patient is an
+appropriate candidate for bariatric surgery, without unmanaged conditions
+that would impair postoperative adherence, is required prior to approval.
+
+Criterion 5: The patient must not have a documented contraindication to
+surgery, such as an unstable cardiopulmonary condition or active substance
+use disorder, that has not been addressed.
+
+SECTION: Step Therapy and Conservative Treatment Requirements
+
+Non-surgical weight-management approaches, including supervised diet and
+exercise programs, must be attempted and documented before bariatric surgery
+is authorized, consistent with Criterion 3.
+
+SECTION: Documentation Requirements
+
+Requests must include current BMI, weight and height, documented
+obesity-related comorbidities, evidence of the supervised weight-management
+program, and the psychological evaluation outcome.
+
+SECTION: Exclusions
+
+Bariatric surgery requested primarily for cosmetic reasons without a
+qualifying BMI and comorbidity profile is not considered medically
+necessary under this policy.
+
+SECTION: Safety
+
+Determinations under this policy should consider cardiovascular risk,
+diabetes control, and any documented allergies or medication interactions
+relevant to perioperative management. Any determination generated from this
+policy must be reviewed by a qualified clinical reviewer before
+communication to the patient or provider.

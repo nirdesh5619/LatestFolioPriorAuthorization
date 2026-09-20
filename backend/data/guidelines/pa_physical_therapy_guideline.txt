@@ -1,0 +1,49 @@
+GUIDELINE: DEMO PRIOR AUTHORIZATION CRITERIA - EXTENDED PHYSICAL THERAPY
+VERSION: 1.0
+ORGANIZATION: Synthetic Payer Clinical Policy Unit
+STATUS: DEMONSTRATION DATA - NOT AN ACTUAL PAYER POLICY
+
+SECTION: Coverage Criteria
+
+Criterion 1: An initial course of physical therapy of up to twelve visits
+over eight weeks is considered medically necessary for a documented
+musculoskeletal diagnosis without prior authorization.
+
+Criterion 2: Extension of physical therapy beyond the initial course is
+considered medically necessary when the treating therapist documents
+measurable functional improvement from the initial course and a specific
+remaining functional goal.
+
+Criterion 3: Extension requests without documentation of measurable
+improvement from the prior course of therapy are not considered medically
+necessary, as continued treatment without progress does not meet medical
+necessity criteria.
+
+Criterion 4: Physical therapy for chronic pain maintenance without a
+defined functional goal or expectation of continued improvement is not
+considered medically necessary beyond the initial course.
+
+SECTION: Step Therapy and Conservative Treatment Requirements
+
+Extended physical therapy requests should document the number of visits
+completed in the initial course, the functional outcome measures used, and
+the specific goals of continued treatment.
+
+SECTION: Documentation Requirements
+
+Requests must include the diagnosis, number of visits already completed,
+functional improvement documented to date, and the specific functional
+goals for the requested extension.
+
+SECTION: Exclusions
+
+Physical therapy visits requested beyond what is supported by documented
+functional improvement, or for general wellness or maintenance purposes,
+are not considered medically necessary under this policy.
+
+SECTION: Safety
+
+Determinations under this policy should consider any relevant comorbidities
+that may affect rehabilitation potential or session tolerance. Any
+determination generated from this policy must be reviewed by a qualified
+clinical reviewer before communication to the patient or provider.

@@ -1,0 +1,50 @@
+GUIDELINE: DEMO PRIOR AUTHORIZATION CRITERIA - DURABLE MEDICAL EQUIPMENT (DME)
+VERSION: 1.0
+ORGANIZATION: Synthetic Payer Clinical Policy Unit
+STATUS: DEMONSTRATION DATA - NOT AN ACTUAL PAYER POLICY
+
+SECTION: Coverage Criteria
+
+Criterion 1: A power wheelchair is considered medically necessary when the
+patient has a documented mobility limitation that prevents safe completion
+of activities of daily living within the home, and a manual wheelchair or
+scooter is documented as insufficient.
+
+Criterion 2: A hospital bed is considered medically necessary when the
+patient has a documented medical condition requiring specific body
+positioning not achievable with an ordinary bed, such as significant
+respiratory compromise or a need for frequent position changes.
+
+Criterion 3: Continuous positive airway pressure (CPAP) equipment is
+considered medically necessary following a diagnostic sleep study
+confirming moderate or severe obstructive sleep apnea.
+
+Criterion 4: A face-to-face evaluation by the ordering provider documenting
+the functional need for the requested equipment within the preceding six
+months is required for all durable medical equipment requests.
+
+SECTION: Step Therapy and Conservative Treatment Requirements
+
+For mobility equipment, a lower level of equipment (such as a cane, walker,
+or manual wheelchair) should be documented as trialed or considered
+insufficient before a power mobility device is authorized.
+
+SECTION: Documentation Requirements
+
+Requests must include the qualifying diagnosis, the specific functional
+limitation, prior equipment tried, and the date and findings of the
+required face-to-face evaluation.
+
+SECTION: Exclusions
+
+Equipment requested primarily for caregiver convenience without a
+documented patient functional limitation is not considered medically
+necessary under this policy.
+
+SECTION: Safety
+
+Determinations under this policy should consider home environment
+suitability, caregiver support, and any safety risks associated with the
+requested equipment. Any determination generated from this policy must be
+reviewed by a qualified clinical reviewer before communication to the
+patient or provider.

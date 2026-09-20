@@ -1,0 +1,50 @@
+GUIDELINE: DEMO PRIOR AUTHORIZATION CRITERIA - SPECIALTY MEDICATIONS (BIOLOGICS)
+VERSION: 1.0
+ORGANIZATION: Synthetic Payer Clinical Policy Unit
+STATUS: DEMONSTRATION DATA - NOT AN ACTUAL PAYER POLICY
+
+SECTION: Coverage Criteria
+
+Criterion 1: A specialty biologic medication is considered medically
+necessary when the patient has a confirmed diagnosis consistent with the
+medication's indication, such as rheumatoid arthritis, psoriatic arthritis,
+inflammatory bowel disease, or moderate-to-severe plaque psoriasis.
+
+Criterion 2: The patient must have documented an inadequate response,
+intolerance, or contraindication to at least one conventional first-line
+therapy (such as methotrexate or another conventional disease-modifying
+agent) before a biologic is authorized, consistent with step therapy.
+
+Criterion 3: Baseline screening for latent tuberculosis and hepatitis B
+must be documented prior to initiating a biologic agent, given the
+infection risk associated with this drug class.
+
+Criterion 4: For continuation of therapy beyond the initial authorization
+period, documentation of clinical response (such as reduced disease
+activity score or improved symptom control) is required.
+
+SECTION: Step Therapy and Conservative Treatment Requirements
+
+At least one conventional (non-biologic) systemic therapy must be tried and
+documented as inadequate, not tolerated, or contraindicated before a
+biologic is approved, per Criterion 2.
+
+SECTION: Documentation Requirements
+
+Requests must include the confirmed diagnosis, prior conventional therapies
+tried with duration and outcome, baseline infection screening results, and
+the prescribing specialist's assessment.
+
+SECTION: Exclusions
+
+Use of a biologic medication for an indication not supported by the
+confirmed diagnosis, or without documented step therapy, is not considered
+medically necessary under this policy.
+
+SECTION: Safety
+
+Determinations under this policy should consider infection risk, documented
+allergies to the specific biologic or its components, and any current
+medications with known interactions. Any determination generated from this
+policy must be reviewed by a qualified clinical reviewer before
+communication to the patient or provider.

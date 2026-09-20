@@ -1,0 +1,13 @@
+backend/.venv/
+backend/__pycache__/
+backend/**/__pycache__/
+backend/.pytest_cache/
+backend/clinical_guidelines.db
+backend/vector_store/index.faiss
+backend/vector_store/metadata.json
+backend/tests/_test_data/
+backend/.env
+
+frontend/node_modules/
+frontend/dist/
+frontend/.env

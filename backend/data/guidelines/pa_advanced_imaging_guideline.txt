@@ -1,0 +1,53 @@
+GUIDELINE: DEMO PRIOR AUTHORIZATION CRITERIA - ADVANCED IMAGING (MRI AND CT)
+VERSION: 1.0
+ORGANIZATION: Synthetic Payer Clinical Policy Unit
+STATUS: DEMONSTRATION DATA - NOT AN ACTUAL PAYER POLICY
+
+SECTION: Coverage Criteria
+
+Criterion 1: Advanced imaging such as MRI or CT of the spine, joint, or brain
+is considered medically necessary when the patient has documented red-flag
+symptoms (progressive neurological deficit, suspected malignancy, suspected
+infection, or significant trauma) regardless of duration of symptoms.
+
+Criterion 2: For non-emergent back, neck, or joint pain without red-flag
+symptoms, advanced imaging is considered medically necessary only after at
+least six weeks of documented conservative therapy, such as physical
+therapy, activity modification, or anti-inflammatory medication, without
+adequate improvement.
+
+Criterion 3: Advanced imaging requested for headache is considered medically
+necessary when the patient has new or changed headache pattern, focal
+neurological findings, or a personal history of malignancy.
+
+Criterion 4: Repeat advanced imaging of the same body region within twelve
+months requires documentation of a significant change in clinical status
+since the prior study.
+
+SECTION: Step Therapy and Conservative Treatment Requirements
+
+Requests for musculoskeletal imaging should document prior conservative
+treatment attempts, including physical therapy, home exercise programs, or
+oral analgesics, along with the duration and outcome of each attempt.
+
+SECTION: Documentation Requirements
+
+Requests must include the requested body region, primary diagnosis code,
+duration of symptoms, prior conservative treatments tried, and any red-flag
+findings. Missing documentation of conservative treatment duration for
+non-emergent requests should be treated as insufficient information rather
+than automatic denial.
+
+SECTION: Exclusions
+
+Advanced imaging requested solely for patient reassurance without a
+qualifying clinical indication is not considered medically necessary under
+this policy.
+
+SECTION: Safety
+
+Determinations under this policy should consider radiation exposure history
+for CT requests, contrast allergy history for contrast-enhanced studies, and
+renal function where relevant. Any determination generated from this policy
+must be reviewed by a qualified clinical reviewer before communication to
+the patient or provider.

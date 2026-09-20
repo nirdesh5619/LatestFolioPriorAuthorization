@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+clinical_guidelines.db
+vector_store/index.faiss
+vector_store/metadata.json
+
+tests/_test_data/
+
+.env

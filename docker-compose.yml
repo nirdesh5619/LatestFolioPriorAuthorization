@@ -1,0 +1,31 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=sqlite:///./clinical_guidelines.db
+      - FAISS_INDEX_PATH=./vector_store/index.faiss
+      - FAISS_METADATA_PATH=./vector_store/metadata.json
+      - EMBEDDING_MODEL=sentence-transformers/all-MiniLM-L6-v2
+      - TOP_K=8
+      - LOG_LEVEL=INFO
+      - CORS_ORIGINS=http://localhost:5173,http://localhost:3000
+      # Optional: set on your host and pass through to enable real LLM-drafted
+      # rationales + token metrics. Leave unset to use the deterministic
+      # templated rationale (fully functional with zero external dependencies).
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - ANTHROPIC_MODEL=${ANTHROPIC_MODEL:-claude-haiku-4-5-20251001}
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/vector_store:/app/vector_store
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: http://localhost:8000/api/v1
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
