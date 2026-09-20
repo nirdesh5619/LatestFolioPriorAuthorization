@@ -22,8 +22,8 @@ class ReviewService:
         self.run_repo = OrchestrationRepository(db)
         self.patient_repo = PatientRepository(db)
 
-    def list_queue(self, limit: int = 50) -> list[ReviewQueueItem]:
-        runs = self.run_repo.list_pending_review(limit)
+    def list_queue(self, limit: int = 50, determination: str = None) -> list[ReviewQueueItem]:
+        runs = self.run_repo.list_pending_review(limit, determination)
         items = []
         for run in runs:
             patient = self.patient_repo.get(run.patient_id)
