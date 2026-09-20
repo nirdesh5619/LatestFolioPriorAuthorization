@@ -126,15 +126,13 @@ class OrchestrationRepository:
         stmt = select(OrchestrationRun).order_by(OrchestrationRun.id.desc()).limit(limit)
         return list(self.db.execute(stmt).scalars().all())
 
-    def list_pending_review(self, limit: int = 50, determination: str = None) -> list[OrchestrationRun]:
+    def list_pending_review(self, limit: int = 50) -> list[OrchestrationRun]:
         stmt = (
             select(OrchestrationRun)
             .where(OrchestrationRun.review_status == "pending_review")
             .order_by(OrchestrationRun.created_at.asc())
+            .limit(limit)
         )
-        if determination:
-            stmt = stmt.where(OrchestrationRun.determination == determination)
-        stmt = stmt.limit(limit)
         return list(self.db.execute(stmt).scalars().all())
 
     def submit_review(

@@ -96,11 +96,7 @@ export const api = {
     return request<CostMetrics>(`/observability/costs?${query.toString()}`);
   },
 
-  getReviewQueue: (determination?: string) => {
-    const params = new URLSearchParams();
-    if (determination) params.set("determination", determination);
-    return request<ReviewQueueItem[]>(`/review/queue${params.toString() ? "?" + params.toString() : ""}`);
-  },
+  getReviewQueue: () => request<ReviewQueueItem[]>("/review/queue"),
   getReviewDetail: (runId: number) => request<ReviewDetail>(`/review/${runId}`),
   submitReview: (runId: number, payload: SubmitReviewPayload) =>
     request<ReviewResult>(`/review/${runId}`, {

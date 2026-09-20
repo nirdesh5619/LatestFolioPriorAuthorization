@@ -9,12 +9,9 @@ router = APIRouter(prefix="/review", tags=["review"])
 
 
 @router.get("/queue", response_model=list[ReviewQueueItem])
-def get_review_queue(limit: int = 50, determination: str = None, db: Session = Depends(get_db)) -> list[ReviewQueueItem]:
-    """Every completed determination awaiting a clinical reviewer's sign-off, oldest first.
-    
-    Optional filter by determination status (pended, approved, denied).
-    """
-    return ReviewService(db).list_queue(limit, determination)
+def get_review_queue(limit: int = 50, db: Session = Depends(get_db)) -> list[ReviewQueueItem]:
+    """Every completed determination awaiting a clinical reviewer's sign-off, oldest first."""
+    return ReviewService(db).list_queue(limit)
 
 
 @router.get("/{run_id}", response_model=ReviewDetail)
