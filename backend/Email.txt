@@ -1,0 +1,47 @@
+
+Subject: Prior Authorization Multi-Agent Platform — Project Overview
+
+Here’s a polished, professional version that keeps the technical details while making the email easier to read:
+
+Hi [Recipient],
+
+I wanted to share a brief overview of the Prior Authorization (PA) Multi-Agent Platform I’ve been building. It is a demonstration system designed to show how AI can make the prior authorization process faster, more transparent, and more consistent, while keeping a human clinician firmly in control of every decision.
+
+**The Problem**
+
+Prior authorization can be a slow and frustrating part of healthcare administration. A provider submits a request for a procedure, medication, or medical equipment, and the payer must evaluate it against detailed coverage criteria such as BMI thresholds, prior treatments, documentation requirements, and exclusions.
+
+In many workflows, this process can be manual and difficult to understand. A patient or provider may receive a denial without a clear explanation of which criteria were not met or what additional evidence could change the outcome.
+
+**What the Platform Does Differently**
+
+The platform evaluates every coverage criterion individually and shows the specific patient evidence supporting each criterion. Rather than relying on a black-box AI decision, the actual approve, deny, or pend determination is made by a deterministic rules engine. This makes the outcome consistent, explainable, and auditable.
+
+**Core Components**
+
+* **Frontend (React):** Patient records, request submission, live AI pipeline visualization, clinician review queue, and operations dashboard.
+* **Backend (FastAPI/Python):** REST API that runs the six-agent evaluation pipeline and streams progress in real time.
+* **Retrieval Layer (RAG):** Vector search across the payer policy library to identify the applicable policy document for each request.
+* **LLM Integration (Anthropic/OpenAI):** Used to generate a plain-language explanation of a decision that has already been determined by the rules engine, rather than making the decision itself.
+* **Human-in-the-Loop Review:** No determination is final until a clinical reviewer signs off. Reviewers can uphold or override the recommendation, with an explanation required for an override.
+* **Observability Dashboard:** System health, request volume, outcomes, reviewer override rates, and AI costs, with time-based filtering.
+* **Audit Trail & Reporting:** Every pipeline step, criterion evaluation, and review decision is recorded and can be exported as a PDF report.
+
+**How the Multi-Agent Approach Helps**
+
+The request moves through six specialized agents in sequence: **intake, guideline retrieval, risk assessment, criteria matching, determination, and safety validation.** Each agent has a focused responsibility rather than relying on one system to perform the entire workflow.
+
+This provides several benefits:
+
+* **Faster answers:** The pipeline can process a request in seconds and provide live visibility into its progress.
+* **Clearer reasons:** Each criterion shows whether it was met, not met, or requires additional information, along with the supporting evidence.
+* **Fewer inappropriate denials:** Borderline cases can be flagged as needing more information rather than relying on an uncertain automated denial.
+* **Built-in safety checks:** A dedicated safety agent independently cross-checks the evaluation and can flag potential safety concerns, such as a documented allergy overlapping with a current medication.
+* **Human oversight:** Every AI-assisted determination, including approvals, is routed to a clinical reviewer before becoming final.
+
+The platform is currently a **demonstration system using entirely synthetic patients and synthetic payer policies**. It is not connected to any real payer, EHR, or claims system. Its purpose is to demonstrate what a more transparent, evidence-backed prior authorization workflow could look like from end to end.
+
+I’d be happy to walk through a live demo or share the full design documentation if that would be useful.
+
+Best regards,
+[Your Name]
