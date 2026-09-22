@@ -414,7 +414,7 @@ export default function ObservabilityPage() {
                         <td>#{r.run_id}</td>
                         <td>{r.patient_id}</td>
                         <td>{r.requested_service ?? "—"}</td>
-                        <td>{r.determination ?? "—"}</td>
+                        <td>{r.final_determination ?? r.determination ?? "—"}</td>
                         <td>{r.status}</td>
                         <td>{new Date(r.created_at).toLocaleString()}</td>
                       </tr>

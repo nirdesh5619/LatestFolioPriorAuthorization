@@ -86,8 +86,11 @@ export const api = {
   getTrace: (runId: number) => request<AgentTraceEntry[]>(`/orchestration/runs/${runId}/trace`),
   getReportUrl: (runId: number) => `${API_BASE_URL}/orchestration/runs/${runId}/report.pdf`,
 
-  getMetrics: (period: MetricsPeriod = "all") =>
-    request<ObservabilityMetrics>(`/observability/metrics?period=${period}`),
+  getMetrics: (period: MetricsPeriod = "all", recentLimit?: number) => {
+    const query = new URLSearchParams({ period });
+    if (recentLimit) query.set("recent_limit", String(recentLimit));
+    return request<ObservabilityMetrics>(`/observability/metrics?${query.toString()}`);
+  },
   getCostMetrics: (params: { period: CostPeriod; startDate?: string; endDate?: string; model?: string }) => {
     const query = new URLSearchParams({ period: params.period });
     if (params.startDate) query.set("start_date", params.startDate);
@@ -96,11 +99,7 @@ export const api = {
     return request<CostMetrics>(`/observability/costs?${query.toString()}`);
   },
 
-  getReviewQueue: (determination?: string) => {
-    const params = new URLSearchParams();
-    if (determination) params.set("determination", determination);
-    return request<ReviewQueueItem[]>(`/review/queue${params.toString() ? "?" + params.toString() : ""}`);
-  },
+  getReviewQueue: () => request<ReviewQueueItem[]>("/review/queue"),
   getReviewDetail: (runId: number) => request<ReviewDetail>(`/review/${runId}`),
   submitReview: (runId: number, payload: SubmitReviewPayload) =>
     request<ReviewResult>(`/review/${runId}`, {

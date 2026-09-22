@@ -6,7 +6,7 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
-from app.db.repositories import OrchestrationRepository
+from app.db.repositories import OrchestrationRepository, PatientRepository
 from app.rag.faiss_store import get_faiss_store
 from app.schemas.observability import (
     AgentStats,
@@ -82,10 +82,14 @@ class MetricsService:
     def __init__(self, db: Session):
         self.db = db
         self.run_repo = OrchestrationRepository(db)
+        self.patient_repo = PatientRepository(db)
 
-    def get_metrics(self, period: str = "all") -> ObservabilityMetrics:
+    def get_metrics(self, period: str = "all", recent_limit: int = 20) -> ObservabilityMetrics:
         """Dashboard-wide metrics, optionally scoped to a trailing window (7d/30d/month/year)
         via `period`; "all" (the default) preserves the original unfiltered, all-time view.
+        `recent_limit` controls how many of the most recent runs are returned in
+        `recent_runs` - the observability dashboard wants a short preview (its default of
+        20), while the full History page requests a much larger window.
         """
         settings = get_settings()
         if period not in VALID_METRICS_PERIODS:
@@ -151,13 +155,21 @@ class MetricsService:
 
         llm_usage = self._llm_usage_stats(by_agent.get("determination_agent", []), settings)
 
-        recent = sorted(runs, key=lambda r: r.id, reverse=True)[:20]
+        recent = sorted(runs, key=lambda r: r.id, reverse=True)[:recent_limit]
+        patients_by_id = {
+            p.id: p for p in self.patient_repo.list_by_ids([r.patient_id for r in recent])
+        }
         recent_runs = [
             RecentRun(
                 run_id=r.id,
                 patient_id=r.patient_id,
+                patient_identifier=patients_by_id[r.patient_id].patient_identifier
+                if r.patient_id in patients_by_id
+                else None,
                 requested_service=r.requested_service,
                 determination=r.determination,
+                final_determination=r.final_determination,
+                review_status=r.review_status,
                 status=r.status,
                 created_at=r.created_at,
             )

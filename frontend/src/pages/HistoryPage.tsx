@@ -2,9 +2,7 @@ import { useEffect, useState } from "react";
 import { api, ApiError } from "../api/client";
 import type { ObservabilityMetrics, RecentRun } from "../api/types";
 
-interface RunDetail extends RecentRun {
-  patient_identifier?: string | null;
-}
+type RunDetail = RecentRun;
 
 interface TraceEntry {
   agent: string;
@@ -37,18 +35,13 @@ export default function HistoryPage() {
     setLoading(true);
     setError(null);
     api
-      .getMetrics("all")
+      .getMetrics("all", 5000)
       .then((metrics: ObservabilityMetrics) => {
         const runsData = metrics.recent_runs.map((r) => ({
-          run_id: r.run_id,
-          patient_id: r.patient_id,
+          ...r,
           patient_identifier: r.patient_identifier || `Patient ${r.patient_id}`,
-          requested_service: r.requested_service,
-          determination: r.determination,
-          status: r.status,
-          created_at: r.created_at,
         }));
-        
+
         setAllRuns(runsData);
         setRuns(runsData);
         
@@ -254,29 +247,29 @@ export default function HistoryPage() {
                     <div className="muted" style={{ fontSize: 12, marginTop: 4 }}>
                       {run.requested_service ?? "—"}
                     </div>
-                    <div style={{ marginTop: 6, display: "flex", gap: 8 }}>
-                      {run.determination && (
-                        <span
-                          className="pill"
-                          style={{
-                            backgroundColor:
-                              run.determination === "approved"
-                                ? "#c8e6c9"
-                                : run.determination === "denied"
-                                  ? "#ffcdd2"
-                                  : "#ffe082",
-                            color:
-                              run.determination === "approved"
-                                ? "#1b5e20"
-                                : run.determination === "denied"
-                                  ? "#b71c1c"
-                                  : "#f57f17",
-                            padding: "2px 8px",
-                            borderRadius: 4,
-                            fontSize: 11,
-                          }}
-                        >
-                          {run.determination}
+                    <div style={{ marginTop: 6, display: "flex", gap: 8, alignItems: "center" }}>
+                      {(() => {
+                        const effective = run.final_determination ?? run.determination;
+                        if (!effective) return null;
+                        return (
+                          <span
+                            className="pill"
+                            style={{
+                              backgroundColor:
+                                effective === "approved" ? "#c8e6c9" : effective === "denied" ? "#ffcdd2" : "#ffe082",
+                              color: effective === "approved" ? "#1b5e20" : effective === "denied" ? "#b71c1c" : "#f57f17",
+                              padding: "2px 8px",
+                              borderRadius: 4,
+                              fontSize: 11,
+                            }}
+                          >
+                            {effective}
+                          </span>
+                        );
+                      })()}
+                      {run.review_status === "reviewed" && run.final_determination !== run.determination && (
+                        <span className="muted" style={{ fontSize: 10 }}>
+                          (overridden by reviewer, AI said {run.determination})
                         </span>
                       )}
                     </div>

@@ -14,6 +14,7 @@ router = APIRouter(prefix="/observability", tags=["observability"])
 @router.get("/metrics", response_model=ObservabilityMetrics)
 def get_metrics(
     period: str = Query("all", description="7d | 30d | month | year | all"),
+    recent_limit: int = Query(20, ge=1, le=5000, description="Max entries returned in recent_runs."),
     db: Session = Depends(get_db),
 ) -> ObservabilityMetrics:
     """System health, request volume, determination outcomes, per-agent latency/
@@ -22,7 +23,7 @@ def get_metrics(
     Scoped to a trailing window via `period`; defaults to all-time history.
     """
     try:
-        return MetricsService(db).get_metrics(period=period)
+        return MetricsService(db).get_metrics(period=period, recent_limit=recent_limit)
     except ValueError as exc:
         raise InvalidPayloadError(str(exc)) from exc
 

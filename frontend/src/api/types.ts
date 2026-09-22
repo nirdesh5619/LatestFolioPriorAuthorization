@@ -199,8 +199,11 @@ export interface SystemHealth {
 export interface RecentRun {
   run_id: number;
   patient_id: number;
+  patient_identifier: string | null;
   requested_service: string | null;
   determination: DeterminationStatus | null;
+  final_determination: DeterminationStatus | null;
+  review_status: string;
   status: string;
   created_at: string;
 }

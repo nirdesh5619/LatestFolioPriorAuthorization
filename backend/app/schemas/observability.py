@@ -46,8 +46,11 @@ class SystemHealth(BaseModel):
 class RecentRun(BaseModel):
     run_id: int
     patient_id: int
+    patient_identifier: str | None = None
     requested_service: str | None
     determination: str | None
+    final_determination: str | None = None
+    review_status: str
     status: str
     created_at: datetime
 

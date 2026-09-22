@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api, ApiError } from "../api/client";
 import type { ReviewQueueItem } from "../api/types";
 import { DeterminationBadge } from "../components/Badge";
@@ -9,15 +9,12 @@ export default function ReviewQueuePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  
-  const selectedFilter = searchParams.get("determination") || "pended";
 
-  const load = (determination: string = selectedFilter) => {
+  const load = () => {
     setLoading(true);
     setError(null);
     api
-      .getReviewQueue(determination)
+      .getReviewQueue()
       .then(setQueue)
       .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load review queue."))
       .finally(() => setLoading(false));
@@ -25,11 +22,7 @@ export default function ReviewQueuePage() {
 
   useEffect(() => {
     load();
-  }, [selectedFilter]);
-
-  const handleFilterChange = (filter: string) => {
-    setSearchParams({ determination: filter });
-  };
+  }, []);
 
   return (
     <div>
@@ -43,30 +36,6 @@ export default function ReviewQueuePage() {
         Every determination requires a clinical reviewer's sign-off before it is final. This queue lists
         completed determinations awaiting that review, oldest first.
       </p>
-
-      <div style={{ marginBottom: 16 }}>
-        <label style={{ marginRight: 16, fontWeight: 500 }}>Filter by Status:</label>
-        <button
-          className={selectedFilter === "pended" ? "primary" : "secondary"}
-          onClick={() => handleFilterChange("pended")}
-          style={{ marginRight: 8 }}
-        >
-          Pended
-        </button>
-        <button
-          className={selectedFilter === "approved" ? "primary" : "secondary"}
-          onClick={() => handleFilterChange("approved")}
-          style={{ marginRight: 8 }}
-        >
-          Approved
-        </button>
-        <button
-          className={selectedFilter === "denied" ? "primary" : "secondary"}
-          onClick={() => handleFilterChange("denied")}
-        >
-          Denied
-        </button>
-      </div>
 
       {error && <div className="error-banner">{error}</div>}
       {loading && queue.length === 0 && <p className="loading">Loading queue…</p>}
